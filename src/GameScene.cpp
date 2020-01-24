@@ -3,25 +3,34 @@
 //
 
 #include "GameScene.h"
+#include <iostream>
 
 GameScene::GameScene() {
-    sf::Texture backgroundTexture;
-    if(backgroundTexture.loadFromFile("spaceBackground.png"))
-        mBackground.setTexture(backgroundTexture);
+    mBackground = new sf::Sprite;
+    mBackgroundTexture = new sf::Texture;
 }
 
 GameScene::~GameScene() {
-
+    delete mBackgroundTexture;
 }
 
 void GameScene::processFrame(const CommandReader&) {
 
 }
 
-void GameScene::init() {
+void GameScene::init(const sf::RenderTarget& target) {
     mGameTimer.restart();
+
+    if (mBackgroundTexture->loadFromFile("..\\resources\\spaceBackground.png")) {
+        mBackground->setTexture(*mBackgroundTexture);
+    }
+
+    float factorX = float(target.getSize().x) / float(mBackgroundTexture->getSize().x);
+    float factorY = float(target.getSize().y) / float(mBackgroundTexture->getSize().y);
+    mBackground->setScale(factorX, factorY);
+
 }
 
-void GameScene::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    target.getSize();
+void GameScene::draw(sf::RenderTarget& target, sf::RenderStates) const {
+    target.draw(*mBackground);
 }

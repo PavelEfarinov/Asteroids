@@ -8,7 +8,7 @@ int main() {
 
     GameScene gameScene;
     CommandReader reader;
-    gameScene.init();
+    gameScene.init(window);
 
     while (window.isOpen()) {
         Event event;

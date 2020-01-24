@@ -16,18 +16,18 @@ class GameScene: public sf::Drawable {
 public:
     GameScene();
 
-    void init();
+    void init(const sf::RenderTarget& target);
 
     void processFrame(const CommandReader& commandReader);
-
     ~GameScene();
+
 private:
-
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
 private:
     sf::Clock mGameTimer;
-    sf::Sprite mBackground;
+    sf::Sprite* mBackground;
+
+    sf::Texture* mBackgroundTexture;
 };
 
 
