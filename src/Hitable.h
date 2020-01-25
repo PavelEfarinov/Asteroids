@@ -9,12 +9,13 @@
 class Hitable {
 public:
     explicit Hitable(double originalHealthPoint) {
-        mHealth = originalHealthPoint;
+        mHealthPoint = originalHealthPoint;
+        mCurrentHealth = mHealthPoint;
     }
-    virtual void processHit() = 0;
-    virtual void destroy() = 0;
+    virtual bool processHit(double harmPoint) = 0;
 protected:
-    double mHealth;
+    double mHealthPoint;
+    double mCurrentHealth;
 };
 
 
