@@ -6,6 +6,8 @@ int main() {
     using namespace sf;
     RenderWindow window(VideoMode::getDesktopMode(), "space", sf::Style::Fullscreen);
 
+    window.setFramerateLimit(60);
+
     GameScene gameScene;
     CommandReader reader;
     gameScene.init(window);

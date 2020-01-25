@@ -11,22 +11,32 @@
 #include<SFML/Graphics/Sprite.hpp>
 #include<SFML/Graphics/Texture.hpp>
 #include "CommandReader.h"
+#include "SpaceBody.h"
+#include "Asteroid.h"
 
-class GameScene: public sf::Drawable {
+class GameScene : public sf::Drawable {
 public:
     GameScene();
 
     void init(const sf::RenderTarget& target);
 
     void processFrame(const CommandReader& commandReader);
+
     ~GameScene();
 
 private:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-private:
-    sf::Clock mGameTimer;
-    sf::Sprite* mBackground;
 
+private:
+    const double mAsteroidSpawnRate = 5;
+    const int mInitialAsteroidsNumber = 5;
+
+    std::vector<Asteroid*> mAsteroids;
+    sf::Clock mGameTimer;
+
+    sf::Vector2u mWorldSize;
+    sf::Texture mAsteroidTexture;
+    sf::Sprite* mBackground;
     sf::Texture* mBackgroundTexture;
 };
 
