@@ -18,7 +18,7 @@ int main() {
 
             reader.updateKeyboard(event);
 
-            if (event.type == Event::Closed) {
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
                 window.close();
             }
         }

@@ -23,6 +23,7 @@ void SpaceBody::move(sf::Time time, sf::Vector2u sceneSize) {
 
     mPosition.x -= int(mPosition.x / sceneSize.x) * sceneSize.x;
     mPosition.y -= int(mPosition.y / sceneSize.y) * sceneSize.y;
+    //TODO this translation formula doesn't work with up->down and left->right transitions
 
     mProjection.setPosition(mPosition);
 }

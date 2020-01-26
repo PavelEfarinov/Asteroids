@@ -11,13 +11,16 @@ GameScene::GameScene() {
 
 GameScene::~GameScene() {
     delete mBackgroundTexture;
+    for (auto asteroid: mAsteroids) {
+        delete asteroid;
+    }
 }
 
 void GameScene::processFrame(const CommandReader&) {
     for (auto asteroid: mAsteroids) {
-        asteroid->move(mGameTimer.getElapsedTime(), mWorldSize);
+        asteroid->move(mFrameTime - mGameTimer.getElapsedTime(), mWorldSize);
     }
-    mGameTimer.restart();
+    mFrameTime = mGameTimer.getElapsedTime();
 }
 
 void GameScene::init(const sf::RenderTarget& target) {
@@ -37,10 +40,11 @@ void GameScene::init(const sf::RenderTarget& target) {
     if (mAsteroidTexture.loadFromFile("..\\resources\\asteroid.png")) {
         asteroid->setTexture(mAsteroidTexture);
     }
-
-    mAsteroids.push_back(new Asteroid(sf::Vector2f(target.getSize().x / 2, target.getSize().y / 2),
-                                      sf::Vector2f((10 - rand() % 20) / 50.0, (10 - rand() % 20) / 50.0), *asteroid,
-                                      1));
+    for (int i = 0; i < mInitialAsteroidsNumber; ++i) {
+        mAsteroids.push_back(new Asteroid(sf::Vector2f(target.getSize().x / 2, target.getSize().y / 2),
+                                          sf::Vector2f((10 - rand() % 20) / 50.0, (10 - rand() % 20) / 50.0), *asteroid,
+                                          1));
+    }
     //TODO initialize player ship and asteroids
 }
 

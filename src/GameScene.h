@@ -33,6 +33,7 @@ private:
 
     std::vector<Asteroid*> mAsteroids;
     sf::Clock mGameTimer;
+    sf::Time mFrameTime;
 
     sf::Vector2u mWorldSize;
     sf::Texture mAsteroidTexture;
