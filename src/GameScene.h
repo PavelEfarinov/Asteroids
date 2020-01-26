@@ -28,12 +28,13 @@ private:
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 private:
-    const double mAsteroidSpawnRate = 5;
+    const double mAsteroidSpawnDelay = 5000;
     const int mInitialAsteroidsNumber = 5;
 
     std::vector<Asteroid*> mAsteroids;
     sf::Clock mGameTimer;
     sf::Time mFrameTime;
+    sf::Time mLastAsteroidSpawn;
 
     sf::Vector2u mWorldSize;
     sf::Texture mAsteroidTexture;
