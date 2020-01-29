@@ -21,10 +21,18 @@ void SpaceBody::move(sf::Time time, sf::Vector2u sceneSize) {
     mSpeed.y += mAcceleration.y * time.asMilliseconds();
     mPosition += sf::Vector2f(distanceX, distanceY);
 
-    mPosition.x -= int(mPosition.x / sceneSize.x) * sceneSize.x;
-    mPosition.y -= int(mPosition.y / sceneSize.y) * sceneSize.y;
-    //TODO this translation formula doesn't work with up->down and left->right transitions
-
+    if (mPosition.x > sceneSize.x) {
+        mPosition.x -= int(mPosition.x / sceneSize.x) * sceneSize.x;
+    } else if (mPosition.x < 0) {
+        mPosition.x -= int(mPosition.x / sceneSize.x) * sceneSize.x;
+        mPosition.x += sceneSize.x;
+    }
+    if (mPosition.y > sceneSize.y) {
+        mPosition.y -= int(mPosition.y / sceneSize.y) * sceneSize.y;
+    } else if (mPosition.y < 0) {
+        mPosition.y -= int(mPosition.y / sceneSize.y) * sceneSize.y;
+        mPosition.y += sceneSize.y;
+    }
     mProjection.setPosition(mPosition);
 }
 
