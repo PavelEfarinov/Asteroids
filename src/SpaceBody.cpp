@@ -47,18 +47,16 @@ void SpaceBody::move(sf::Time time, sf::Vector2u sceneSize) {
     if (mPosition.y < 0) {
         imaginaryPositions[0].y = sceneSize.y + mPosition.y;
         imaginaryPositions[1].y = sceneSize.y + mPosition.y;
-    }
-    if (mPosition.y > sceneSize.y - textureSize.y) {
-        imaginaryPositions[2].y = sceneSize.y - mPosition.y;
-        imaginaryPositions[3].y = sceneSize.y - mPosition.y;
+    } else if (mPosition.y > sceneSize.y - textureSize.y) {
+        imaginaryPositions[2].y = mPosition.y - sceneSize.y;
+        imaginaryPositions[3].y = mPosition.y - sceneSize.y;
     }
     if (mPosition.x < 0) {
         imaginaryPositions[0].x = sceneSize.x + mPosition.x;
         imaginaryPositions[2].x = sceneSize.x + mPosition.x;
-    }
-    if (mPosition.x > sceneSize.x - textureSize.x) {
-        imaginaryPositions[1].x = sceneSize.x - mPosition.x;
-        imaginaryPositions[3].x = sceneSize.x - mPosition.x;
+    } else if (mPosition.x > sceneSize.x - textureSize.x) {
+        imaginaryPositions[1].x = mPosition.x - sceneSize.x;
+        imaginaryPositions[3].x = mPosition.x - sceneSize.x;
     }
 
     for (int i = 0; i < 4; ++i) {
