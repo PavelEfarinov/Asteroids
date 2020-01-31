@@ -23,6 +23,7 @@ protected:
     sf::Vector2f mSpeed; // as pixels per millisecond
     sf::Vector2f mAcceleration;
     sf::Sprite mProjection;
+    sf::Sprite mImaginaryProjection;
 };
 
 

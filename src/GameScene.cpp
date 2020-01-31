@@ -18,11 +18,11 @@ GameScene::~GameScene() {
 
 void GameScene::processFrame(const CommandReader&) {
     if (mGameTimer.getElapsedTime().asMilliseconds() - mLastAsteroidSpawn.asMilliseconds() > mAsteroidSpawnDelay) {
-        sf::Sprite* asteroid = new sf::Sprite;
+        auto* asteroid = new sf::Sprite;
         asteroid->setTexture(mAsteroidTexture);
 
-        mAsteroids.push_back(new Asteroid(sf::Vector2f(mWorldSize.x / 2, mWorldSize.y / 2),
-                                          sf::Vector2f((10 - rand() % 20) / 50.0, (10 - rand() % 20) / 50.0), *asteroid,
+        mAsteroids.push_back(new Asteroid(sf::Vector2f(mWorldSize.x / 2.0, mWorldSize.y / 2.0),
+                                          sf::Vector2f((10 - rand() % 20) / mAsteroidSpeed, (10 - rand() % 20) / mAsteroidSpeed), *asteroid,
                                           1));
         mLastAsteroidSpawn = mGameTimer.getElapsedTime();
     }
@@ -47,10 +47,10 @@ void GameScene::init(const sf::RenderTarget& target) {
     mAsteroidTexture.loadFromFile("..\\resources\\asteroid.png");
 
     for (int i = 0; i < mInitialAsteroidsNumber; ++i) {
-        sf::Sprite* asteroid = new sf::Sprite;
+        auto asteroid = new sf::Sprite;
         asteroid->setTexture(mAsteroidTexture);
-        mAsteroids.push_back(new Asteroid(sf::Vector2f(target.getSize().x / 2, target.getSize().y / 2),
-                                          sf::Vector2f((10 - rand() % 20) / 50.0, (10 - rand() % 20) / 50.0), *asteroid,
+        mAsteroids.push_back(new Asteroid(sf::Vector2f(target.getSize().x / 2.0, target.getSize().y / 2.0),
+                                          sf::Vector2f((10 - rand() % 20) / mAsteroidSpeed, (10 - rand() % 20) / mAsteroidSpeed), *asteroid,
                                           1));
     }
     mLastAsteroidSpawn = mGameTimer.getElapsedTime();
