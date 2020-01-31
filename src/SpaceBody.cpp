@@ -11,7 +11,7 @@ SpaceBody::SpaceBody(sf::Vector2f pos, sf::Vector2f speed, sf::Vector2f accelera
     mAcceleration = acceleration;
     mProjection = sprite;
     mProjection.setScale(7, 7);
-    mImaginaryProjection = sf::Sprite(mProjection);
+    mImaginaryProjections.resize(4, mProjection);
 }
 
 void SpaceBody::move(sf::Time time, sf::Vector2u sceneSize) {
@@ -25,8 +25,8 @@ void SpaceBody::move(sf::Time time, sf::Vector2u sceneSize) {
 
     sf::Vector2f imaginaryPosition(mPosition);
     sf::Vector2u textureSize;
-    textureSize.x = mImaginaryProjection.getTexture()->getSize().x * mImaginaryProjection.getScale().x;
-    textureSize.y = mImaginaryProjection.getTexture()->getSize().y * mImaginaryProjection.getScale().y;
+    textureSize.x = mProjection.getTexture()->getSize().x * mProjection.getScale().x;
+    textureSize.y = mProjection.getTexture()->getSize().y * mProjection.getScale().y;
 
     if (mPosition.x > sceneSize.x) {
         mPosition.x -= int(mPosition.x / sceneSize.x) * sceneSize.x;
@@ -40,27 +40,38 @@ void SpaceBody::move(sf::Time time, sf::Vector2u sceneSize) {
         mPosition.y -= int(mPosition.y / sceneSize.y) * sceneSize.y;
         mPosition.y += sceneSize.y;
     }
-    // locating imaginary projection
+
+    std::vector<sf::Vector2f> imaginaryPositions(4, mPosition);
+
+    // locating imaginary projections
     if (mPosition.y < 0) {
-        imaginaryPosition.y = sceneSize.y + mPosition.y;
-    } else if (mPosition.y > sceneSize.y - textureSize.y) {
-        imaginaryPosition.y = sceneSize.y - mPosition.y;
+        imaginaryPositions[0].y = sceneSize.y + mPosition.y;
+        imaginaryPositions[1].y = sceneSize.y + mPosition.y;
+    }
+    if (mPosition.y > sceneSize.y - textureSize.y) {
+        imaginaryPositions[2].y = sceneSize.y - mPosition.y;
+        imaginaryPositions[3].y = sceneSize.y - mPosition.y;
     }
     if (mPosition.x < 0) {
-        imaginaryPosition.x = sceneSize.x + mPosition.x;
-    } else if (mPosition.x > sceneSize.x - textureSize.x) {
-        imaginaryPosition.x = sceneSize.x - mPosition.x;
+        imaginaryPositions[0].x = sceneSize.x + mPosition.x;
+        imaginaryPositions[2].x = sceneSize.x + mPosition.x;
+    }
+    if (mPosition.x > sceneSize.x - textureSize.x) {
+        imaginaryPositions[1].x = sceneSize.x - mPosition.x;
+        imaginaryPositions[3].x = sceneSize.x - mPosition.x;
     }
 
-    //TODO add imaginary projection
-//    std::cout << sceneSize.x << ' ' << sceneSize.y << " im " << imaginaryPosition.x <<' ' << imaginaryPosition.y <<" real " << mPosition.x << ' '<< mPosition.y<< '\n';
-    mImaginaryProjection.setPosition(imaginaryPosition);
+    for (int i = 0; i < 4; ++i) {
+        mImaginaryProjections[i].setPosition(imaginaryPositions[i]);
+    }
     mProjection.setPosition(mPosition);
 }
 
 void SpaceBody::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(mProjection);
-    target.draw(mImaginaryProjection);
+    for (auto& imaginaryProjection: mImaginaryProjections) {
+        target.draw(imaginaryProjection);
+    }
 }
 
 SpaceBody::~SpaceBody() {
