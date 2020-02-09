@@ -10,7 +10,7 @@ SpaceBody::SpaceBody(sf::Vector2f pos, sf::Vector2f speed, sf::Vector2f accelera
     mSpeed = speed;
     mAcceleration = acceleration;
     mProjection = sprite;
-    mProjection.setScale(7, 7);
+    mProjection.setScale(2, 2);
     mImaginaryProjections.resize(4, mProjection);
 }
 
@@ -19,11 +19,22 @@ void SpaceBody::move(sf::Time time, sf::Vector2u sceneSize) {
             mSpeed.x * time.asMilliseconds() + mAcceleration.x * time.asMilliseconds() * time.asMilliseconds();
     double distanceY =
             mSpeed.y * time.asMilliseconds() + mAcceleration.y * time.asMilliseconds() * time.asMilliseconds();
-    mSpeed.x += mAcceleration.x * time.asMilliseconds();
-    mSpeed.y += mAcceleration.y * time.asMilliseconds();
+
+    mSpeedUp(time);
+
     mPosition += sf::Vector2f(distanceX, distanceY);
 
-    sf::Vector2f imaginaryPosition(mPosition);
+    mThorMoving(sceneSize);
+
+    mProjection.setPosition(mPosition);
+}
+
+void SpaceBody::mSpeedUp(sf::Time time) {
+    mSpeed.x += mAcceleration.x * time.asMilliseconds();
+    mSpeed.y += mAcceleration.y * time.asMilliseconds();
+}
+
+void SpaceBody::mThorMoving(const sf::Vector2u& sceneSize) {
     sf::Vector2u textureSize;
     textureSize.x = mProjection.getTexture()->getSize().x * mProjection.getScale().x;
     textureSize.y = mProjection.getTexture()->getSize().y * mProjection.getScale().y;
@@ -43,6 +54,7 @@ void SpaceBody::move(sf::Time time, sf::Vector2u sceneSize) {
 
     std::vector<sf::Vector2f> imaginaryPositions(4, mPosition);
 
+    //TODO fix disappearing player ship
     // locating imaginary projections
     if (mPosition.y < 0) {
         imaginaryPositions[0].y = sceneSize.y + mPosition.y;
@@ -60,9 +72,9 @@ void SpaceBody::move(sf::Time time, sf::Vector2u sceneSize) {
     }
 
     for (int i = 0; i < 4; ++i) {
+        mImaginaryProjections[i].setRotation(mProjection.getRotation());
         mImaginaryProjections[i].setPosition(imaginaryPositions[i]);
     }
-    mProjection.setPosition(mPosition);
 }
 
 void SpaceBody::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -75,4 +87,10 @@ void SpaceBody::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 SpaceBody::~SpaceBody() {
     //TODO violates standards of heap memory usage
     delete &mProjection;
+}
+
+std::vector<sf::Sprite> SpaceBody::getAllProjections() {
+    std::vector<sf::Sprite> newVector = mImaginaryProjections;
+    newVector.push_back(mProjection);
+    return newVector;
 }

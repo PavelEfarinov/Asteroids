@@ -10,19 +10,23 @@
 #include "SpaceBody.h"
 #include "Bullet.h"
 
-class Ship: public Hitable, public SpaceBody {
+class Ship : public Hitable, public SpaceBody {
 public:
     Ship(sf::Vector2f acceleration, sf::Vector2f pos, sf::Vector2f speed, sf::Sprite& sprite, double healthPoint);
 
-    bool processHit(double harmPoint);
+    bool processHit(double harmPoint) override;
 
     void rotate(double angle);
 
     void shoot();
 
-    void move();
+    void accelerate(sf::Vector2f);
+
+protected:
+    void mSpeedUp(sf::Time time) override;
+
 private:
-    sf::Vector2f topSpeed;
+    float mTopSpeed = 1; //TODO add this to constructor
     double mRotation = 0;
     std::vector<Bullet> mBullets;
 };

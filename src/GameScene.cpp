@@ -2,6 +2,7 @@
 // Created by fools on 1/24/2020.
 //
 
+#include <iostream>
 #include "GameScene.h"
 
 GameScene::GameScene() {
@@ -16,20 +17,60 @@ GameScene::~GameScene() {
     }
 }
 
-void GameScene::processFrame(const CommandReader&) {
+void GameScene::processFrame(const CommandReader& commandReader) {
+    checkCollisions();
+
+    // Spawning new asteroid
     if (mGameTimer.getElapsedTime().asMilliseconds() - mLastAsteroidSpawn.asMilliseconds() > mAsteroidSpawnDelay) {
         auto* asteroid = new sf::Sprite;
         asteroid->setTexture(mAsteroidTexture);
-
         mAsteroids.push_back(new Asteroid(sf::Vector2f(mWorldSize.x / 2.0, mWorldSize.y / 2.0),
-                                          sf::Vector2f((10 - rand() % 20) / mAsteroidSpeed, (10 - rand() % 20) / mAsteroidSpeed), *asteroid,
+                                          sf::Vector2f((10 - rand() % 20) / mAsteroidSpeed,
+                                                       (10 - rand() % 20) / mAsteroidSpeed), *asteroid,
                                           1));
         mLastAsteroidSpawn = mGameTimer.getElapsedTime();
     }
+
+    if (commandReader.isKeyDown(sf::Keyboard::W)) {
+        mPlayerShip->accelerate(sf::Vector2f(0.0001, 0));
+    }
+    else if (commandReader.isKeyDown(sf::Keyboard::S)) {
+        mPlayerShip->accelerate(sf::Vector2f(-0.0001, 0));
+    } else{
+        mPlayerShip->accelerate(sf::Vector2f(0, 0));
+    }
+    if (commandReader.isKeyDown(sf::Keyboard::A)) {
+        mPlayerShip->rotate(-1);
+    } else if (commandReader.isKeyDown(sf::Keyboard::D)) {
+        mPlayerShip->rotate(1);
+    }
+
+    mPlayerShip->move(mFrameTime - mGameTimer.getElapsedTime(), mWorldSize);
     for (auto asteroid: mAsteroids) {
         asteroid->move(mFrameTime - mGameTimer.getElapsedTime(), mWorldSize);
     }
     mFrameTime = mGameTimer.getElapsedTime();
+}
+
+void GameScene::checkCollisions() {
+    std::vector<std::vector<Asteroid*>::iterator> shouldDelete;
+
+    for (auto i = mAsteroids.begin(); i < mAsteroids.end(); ++i) {
+        for (auto j = i; j < mAsteroids.end(); ++j) {
+            if (i != j && mGameTimer.getElapsedTime().asSeconds() > 1.5) {
+                if (SpaceCollider::areTouching((*i)->getAllProjections(),
+                                               (*j)->getAllProjections())) {
+                    shouldDelete.push_back(i);
+                    shouldDelete.push_back(j);
+                }
+            }
+        }
+    }
+
+    while (!shouldDelete.empty()) {
+        mAsteroids.erase(shouldDelete.back());
+        shouldDelete.pop_back();
+    }
 }
 
 void GameScene::init(const sf::RenderTarget& target) {
@@ -50,16 +91,25 @@ void GameScene::init(const sf::RenderTarget& target) {
         auto asteroid = new sf::Sprite;
         asteroid->setTexture(mAsteroidTexture);
         mAsteroids.push_back(new Asteroid(sf::Vector2f(target.getSize().x / 2.0, target.getSize().y / 2.0),
-                                          sf::Vector2f((10 - rand() % 20) / mAsteroidSpeed, (10 - rand() % 20) / mAsteroidSpeed), *asteroid,
+                                          sf::Vector2f((10 - rand() % 20) / mAsteroidSpeed,
+                                                       (10 - rand() % 20) / mAsteroidSpeed), *asteroid,
                                           1));
     }
+
+    auto* s = new sf::Sprite; // TODO change ship sprite to something acceptable
+
+    s->setTexture(*mBackgroundTexture);
+    s->setTextureRect(sf::IntRect(0, 0, 50, 50));
+
+    mPlayerShip = new Ship(sf::Vector2f(0, 0), sf::Vector2f(200, 200), sf::Vector2f(0, 0), *s, 1000);
+
     mLastAsteroidSpawn = mGameTimer.getElapsedTime();
     //TODO initialize player ship and asteroids
 }
 
 void GameScene::draw(sf::RenderTarget& target, sf::RenderStates) const {
     target.draw(*mBackground);
-
+    target.draw(*mPlayerShip);
     for (auto asteroid: mAsteroids) {
         target.draw(*asteroid);
     }
