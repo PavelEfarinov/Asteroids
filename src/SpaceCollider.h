@@ -13,7 +13,7 @@
 class SpaceCollider {
 public:
     static bool areTouching(const std::vector<sf::Sprite>&, const std::vector<sf::Sprite>&);
-
+    //TODO add collisions between ships and asteroids (cricle-circle or circle-square)
     static float calcuateSquareDistance(const sf::FloatRect&, const sf::FloatRect&);
 };
 

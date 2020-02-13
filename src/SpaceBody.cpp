@@ -10,6 +10,7 @@ SpaceBody::SpaceBody(sf::Vector2f pos, sf::Vector2f speed, sf::Vector2f accelera
     mSpeed = speed;
     mAcceleration = acceleration;
     mProjection = sprite;
+    mProjection.setOrigin(mProjection.getTexture()->getSize().x / 2, mProjection.getTexture()->getSize().y / 2);
     mProjection.setScale(2, 2);
     mImaginaryProjections.resize(4, mProjection);
 }
@@ -54,19 +55,22 @@ void SpaceBody::mThorMoving(const sf::Vector2u& sceneSize) {
 
     std::vector<sf::Vector2f> imaginaryPositions(4, mPosition);
 
-    //TODO fix disappearing player ship
+    sf::Vector2f spriteHalfSize;
+    spriteHalfSize.y = mProjection.getGlobalBounds().height / 2;
+    spriteHalfSize.x = mProjection.getGlobalBounds().width / 2;
+
     // locating imaginary projections
-    if (mPosition.y < 0) {
+    if (mPosition.y - spriteHalfSize.y < 0) {
         imaginaryPositions[0].y = sceneSize.y + mPosition.y;
         imaginaryPositions[1].y = sceneSize.y + mPosition.y;
-    } else if (mPosition.y > sceneSize.y - textureSize.y) {
+    } else if (mPosition.y - spriteHalfSize.y > sceneSize.y - textureSize.y) {
         imaginaryPositions[2].y = mPosition.y - sceneSize.y;
         imaginaryPositions[3].y = mPosition.y - sceneSize.y;
     }
-    if (mPosition.x < 0) {
+    if (mPosition.x - spriteHalfSize.x < 0) {
         imaginaryPositions[0].x = sceneSize.x + mPosition.x;
         imaginaryPositions[2].x = sceneSize.x + mPosition.x;
-    } else if (mPosition.x > sceneSize.x - textureSize.x) {
+    } else if (mPosition.x + spriteHalfSize.x > sceneSize.x - textureSize.x) {
         imaginaryPositions[1].x = mPosition.x - sceneSize.x;
         imaginaryPositions[3].x = mPosition.x - sceneSize.x;
     }

@@ -44,6 +44,8 @@ private:
     sf::Texture mAsteroidTexture;
     sf::Sprite* mBackground;
     sf::Texture* mBackgroundTexture;
+    sf::Texture* mShipTexture;
+    sf::Sprite* mShipSprite;
 
     void checkCollisions();
 };

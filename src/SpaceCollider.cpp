@@ -18,10 +18,6 @@ bool SpaceCollider::areTouching(const std::vector<sf::Sprite>& firstArray, const
 }
 
 float SpaceCollider::calcuateSquareDistance(const sf::FloatRect& firstBody, const sf::FloatRect& secondBody) {
-    return ((firstBody.left + firstBody.width / 2) - (secondBody.left + secondBody.width / 2)) *
-           ((firstBody.left + firstBody.width / 2) -
-            (secondBody.left + secondBody.width / 2)) +
-           ((firstBody.top + firstBody.height / 2) - (secondBody.top + secondBody.height / 2)) *
-           ((firstBody.top + firstBody.height / 2) -
-            (secondBody.top + secondBody.height / 2));
+    return ((firstBody.left) - (secondBody.left)) * ((firstBody.left) - (secondBody.left)) +
+                               ((firstBody.top) - (secondBody.top)) * ((firstBody.top) - (secondBody.top));
 }

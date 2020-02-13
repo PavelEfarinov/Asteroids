@@ -8,6 +8,8 @@
 GameScene::GameScene() {
     mBackground = new sf::Sprite;
     mBackgroundTexture = new sf::Texture;
+    mShipTexture = new sf::Texture;
+    mShipSprite = new sf::Sprite;
 }
 
 GameScene::~GameScene() {
@@ -32,10 +34,10 @@ void GameScene::processFrame(const CommandReader& commandReader) {
     }
 
     if (commandReader.isKeyDown(sf::Keyboard::W)) {
-        mPlayerShip->accelerate(sf::Vector2f(0.0001, 0));
+        mPlayerShip->accelerate(sf::Vector2f(0, -0.0005));
     }
     else if (commandReader.isKeyDown(sf::Keyboard::S)) {
-        mPlayerShip->accelerate(sf::Vector2f(-0.0001, 0));
+        mPlayerShip->accelerate(sf::Vector2f(0, 0.0005));
     } else{
         mPlayerShip->accelerate(sf::Vector2f(0, 0));
     }
@@ -96,12 +98,10 @@ void GameScene::init(const sf::RenderTarget& target) {
                                           1));
     }
 
-    auto* s = new sf::Sprite; // TODO change ship sprite to something acceptable
+    mShipTexture->loadFromFile("..\\resources\\sheep.png");
+    mShipSprite->setTexture(*mShipTexture);
 
-    s->setTexture(*mBackgroundTexture);
-    s->setTextureRect(sf::IntRect(0, 0, 50, 50));
-
-    mPlayerShip = new Ship(sf::Vector2f(0, 0), sf::Vector2f(200, 200), sf::Vector2f(0, 0), *s, 1000);
+    mPlayerShip = new Ship(sf::Vector2f(0, 0), sf::Vector2f(200, 200), sf::Vector2f(0, 0), *mShipSprite, 1000);
 
     mLastAsteroidSpawn = mGameTimer.getElapsedTime();
     //TODO initialize player ship and asteroids
