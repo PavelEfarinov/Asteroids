@@ -35,10 +35,9 @@ void GameScene::processFrame(const CommandReader& commandReader) {
 
     if (commandReader.isKeyDown(sf::Keyboard::W)) {
         mPlayerShip->accelerate(sf::Vector2f(0, -0.0005));
-    }
-    else if (commandReader.isKeyDown(sf::Keyboard::S)) {
+    } else if (commandReader.isKeyDown(sf::Keyboard::S)) {
         mPlayerShip->accelerate(sf::Vector2f(0, 0.0005));
-    } else{
+    } else {
         mPlayerShip->accelerate(sf::Vector2f(0, 0));
     }
     if (commandReader.isKeyDown(sf::Keyboard::A)) {
@@ -66,6 +65,17 @@ void GameScene::checkCollisions() {
                     shouldDelete.push_back(j);
                 }
             }
+        }
+    }
+
+    while (!shouldDelete.empty()) {
+        mAsteroids.erase(shouldDelete.back());
+        shouldDelete.pop_back();
+    }
+
+    for (auto i = mAsteroids.begin(); i < mAsteroids.end(); ++i) {
+        if (SpaceCollider::areTouchingShip((*mPlayerShip).getAllProjections(), (*i)->getAllProjections())) {
+            shouldDelete.push_back(i);
         }
     }
 

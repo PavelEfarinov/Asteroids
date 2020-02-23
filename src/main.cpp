@@ -5,7 +5,7 @@
 int main() {
     using namespace sf;
     RenderWindow window(VideoMode::getDesktopMode(), "space", sf::Style::Fullscreen);
-
+    window.setVerticalSyncEnabled(true);
     window.setFramerateLimit(60);
 
     GameScene gameScene;

@@ -82,6 +82,11 @@ void SpaceBody::mThorMoving(const sf::Vector2u& sceneSize) {
 }
 
 void SpaceBody::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+/*    sf::RectangleShape r;
+    r.setPosition(mProjection.getGlobalBounds().left, mProjection.getGlobalBounds().top);
+    r.setSize(sf::Vector2f(mProjection.getGlobalBounds().width, mProjection.getGlobalBounds().height));
+    r.setFillColor(sf::Color::Red);
+    target.draw(r);*/
     target.draw(mProjection);
     for (auto& imaginaryProjection: mImaginaryProjections) {
         target.draw(imaginaryProjection);
